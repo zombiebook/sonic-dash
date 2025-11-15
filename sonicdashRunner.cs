@@ -101,27 +101,53 @@ namespace sonicdash
 
         private Vector3 GetFacingDirection(Transform player)
         {
-            Vector3 dir = Vector3.zero;
-
-            if (Input.GetKey(KeyCode.W)) dir += new Vector3(0f, 0f, 1f);
-            if (Input.GetKey(KeyCode.S)) dir += new Vector3(0f, 0f, -1f);
-            if (Input.GetKey(KeyCode.A)) dir += new Vector3(-1f, 0f, 0f);
-            if (Input.GetKey(KeyCode.D)) dir += new Vector3(1f, 0f, 0f);
+            // 1) 먼저 Unity 입력 축(패드 + 키보드) 기준
+            float h = Input.GetAxisRaw("Horizontal");
+            float v = Input.GetAxisRaw("Vertical");
+            Vector3 dir = new Vector3(h, 0f, v);
 
             if (dir.sqrMagnitude > 0.001f)
             {
                 dir.Normalize();
-                Debug.Log("[sonicdash] 입력 기반 방향 사용: " + dir.ToString("F2"));
+                Debug.Log("[sonicdash] 축 기반 방향 사용: " + dir.ToString("F2"));
                 return dir;
             }
 
-            Vector3 fwd = player.forward;
-            fwd.y = 0f;
-            if (fwd.sqrMagnitude < 0.0001f)
-                fwd = Vector3.forward;
+            // 2) 축 입력이 없으면 기존처럼 WASD 개별 키 확인
+            Vector3 keyDir = Vector3.zero;
+            if (Input.GetKey(KeyCode.W))
+            {
+                keyDir += new Vector3(0f, 0f, 1f);
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                keyDir += new Vector3(0f, 0f, -1f);
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                keyDir += new Vector3(-1f, 0f, 0f);
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                keyDir += new Vector3(1f, 0f, 0f);
+            }
 
-            Debug.Log("[sonicdash] 입력 없음, forward 기반 방향 사용: " + fwd.normalized.ToString("F2"));
-            return fwd.normalized;
+            if (keyDir.sqrMagnitude > 0.001f)
+            {
+                keyDir.Normalize();
+                Debug.Log("[sonicdash] 키 기반 방향 사용: " + keyDir.ToString("F2"));
+                return keyDir;
+            }
+
+            // 3) 아무 입력도 없으면 캐릭터가 보고 있는 방향으로
+            Vector3 forward = player.forward;
+            forward.y = 0f;
+            if (forward.sqrMagnitude < 0.0001f)
+            {
+                forward = Vector3.forward;
+            }
+            Debug.Log("[sonicdash] 입력 없음, forward 기반 방향 사용: " + forward.normalized.ToString("F2"));
+            return forward.normalized;
         }
 
         // ─────────────── 순간이동 ───────────────
