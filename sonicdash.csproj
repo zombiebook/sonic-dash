@@ -8,6 +8,10 @@
 
     <!-- Managed 폴더 -->
     <SubPath>\Duckov_Data\Managed\</SubPath>
+
+    <!-- 🔽 여기 중요: DLL 이름 / 네임스페이스 -->
+    <AssemblyName>enemyaimwaring</AssemblyName>
+    <RootNamespace>enemyaimwaring</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
