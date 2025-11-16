@@ -7,24 +7,24 @@ namespace enemyaimwaring
     //   enemyaimwaring.ModBehaviour
     public class ModBehaviour : Duckov.Modding.ModBehaviour
     {
-       protected override void OnAfterSetup()
-{
-    try
-    {
-        GameObject go = new GameObject("EnemyAimWarningRoot");
-        UnityEngine.Object.DontDestroyOnLoad(go);
+        protected override void OnAfterSetup()
+        {
+            try
+            {
+                GameObject go = new GameObject("EnemyAimWarningRoot");
+                UnityEngine.Object.DontDestroyOnLoad(go);
 
-        // 🔽 왼쪽 위 HUD 매니저 붙이기
-        go.AddComponent<EnemyAimWarningManager>();
+                // 🔽 왼쪽 위 HUD 매니저 붙이기
+                go.AddComponent<EnemyAimWarningManager>();
 
-        // 🔽 대쉬 러너도 같이 붙이기
-        go.AddComponent<SonicDashRunner>();
+                // 🔽 대쉬 러너도 같이 붙이기
+                go.AddComponent<SonicDashRunner>();
 
-        Debug.Log("[EnemyAimWarning] ModBehaviour.OnAfterSetup - HUD + Dash 초기화 완료");
-    }
-    catch (Exception ex)
-    {
-        Debug.Log("[EnemyAimWarning] 초기화 예외: " + ex);
+                Debug.Log("[EnemyAimWarning] ModBehaviour.OnAfterSetup - HUD + Dash 초기화 완료");
+            }
+            catch (Exception ex)
+            {
+                Debug.Log("[EnemyAimWarning] 초기화 예외: " + ex);
             }
         }
     }
@@ -37,8 +37,28 @@ namespace enemyaimwaring
         private float _cooldown = 0.3f;
         private float _nextAvailableTime;
 
+        // 🔹 순간이동 기능 ON/OFF
+        private bool _teleportEnabled = true;
+
+        // 🔹 토글 키 (F6)
+        private KeyCode _toggleKey = KeyCode.F6;
+
         private void Update()
         {
+            // ───────── 순간이동 기능 토글 (F6) ─────────
+            if (Input.GetKeyDown(_toggleKey))
+            {
+                _teleportEnabled = !_teleportEnabled;
+                Debug.Log("[EnemyAimWarning] 순간이동 " + (_teleportEnabled ? "ON" : "OFF"));
+            }
+
+            // 기능이 꺼져 있으면 아래 로직 안 타게
+            if (!_teleportEnabled)
+            {
+                return;
+            }
+
+            // ───────── 기존 순간이동 입력 처리 ─────────
             if (Time.time < _nextAvailableTime)
                 return;
 
