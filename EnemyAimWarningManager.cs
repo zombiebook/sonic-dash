@@ -583,7 +583,7 @@ public class EnemyAimWarningManager : MonoBehaviour
 
     float baseSize = 80f;
     float cx = Screen.width * 0.5f;
-    float cy = 80f; // 아이콘 세로 위치
+    float cy = 100f; // 아이콘 세로 위치
 
     float drawSize = baseSize;
     if (drawSearch)
